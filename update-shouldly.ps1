@@ -17,3 +17,11 @@ Get-ChildItem *.cs -Recurse -File | ForEach-Object {
 Get-ChildItem *.cs -Recurse -File | ForEach-Object {
     (Get-Content $_) -replace '\.ShouldBeCloseTo\(', '.ShouldBe(' | Set-Content $_.FullName
 }
+
+
+$message = @"
+Other things to watch out for that are type dependent and can't be just text replaced:
+ * Guid.ShouldNotBeEmpty()  ==> ShouldNotBe(Guid.Empty);
+"@
+
+Write-Output $message
