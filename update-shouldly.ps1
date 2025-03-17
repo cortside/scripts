@@ -1,3 +1,5 @@
+## https://github.com/galadril/Shouldly.FromFluentAssertions/blob/main/migrate_fluentassertions_shouldly.ps1
+
 gci *.csproj -Recurse | %{ 
 	if (select-string -inputobject $_ -Pattern "FluentAssertions") { 
 		echo "remove AsyncAnalyzers from $_.Fullname"; 
