@@ -4,10 +4,10 @@
 
 function Get-TimeStamp {
     $timestamp = "[{0:MM/dd/yy} {0:HH:mm:ss}]" -f (Get-Date)
-	echo $timestamp
+	Write-Output $timestamp
 }
 
-$repos = @( 
+$repos = @(
 	@{ origin="https://github.com/cortside/cortside.identityserver4"; name="cortside.identityserver4"; backup="https://corteb@bitbucket.org/enerbank/cortside.identityserver4.git" },
 	@{ origin="https://github.com/cortside/cortside.identityserver4.accesstokenvalidation"; name="cortside.identityserver4.accesstokenvalidation"; backup="https://corteb@bitbucket.org/enerbank/cortside.identityserver4.accesstokenvalidation.git" },
 	@{ origin="https://github.com/cortside/amqptools.git"; name="amqptools"; backup="https://corteb@bitbucket.org/enerbank/cortside.amqptools.git" },
@@ -29,48 +29,48 @@ $repos = @(
 Get-TimeStamp
 
 foreach ($repo in $repos) {
-	Write-Host "repo: $($repo.Name) - from $($repo.origin) to $($repo.backup)"	
-	if (!(Test-Path cortside)) { mkdir cortside }
-	cd cortside
-	if (!(Test-Path $repo.name)) { 
+	Write-Host "repo: $($repo.Name) - from $($repo.origin) to $($repo.backup)"
+	if (!(Test-Path cortside)) { New-Item -ItemType Directory -Name cortside }
+	Set-Location cortside
+	if (!(Test-Path $repo.name)) {
 		git clone --mirror $repo.origin $repo.name
-		cd $repo.name
+		Set-Location $repo.name
 		git remote add --mirror=fetch backup $repo.backup
-		cd ..
+		Set-Location ..
 	}
-	cd ..
-}	
+	Set-Location ..
+}
 
 ## -----------------------------------------
 
 $dirs = @()
-$dirs += dir cortside | ?{$_.PSISContainer}
+$dirs += Get-ChildItem cortside | Where-Object {$_.PSISContainer}
 
 $root = "$($PSScriptRoot)\"
-$dirs | ForEach-Object { $path = $_.FullName.replace($root, ""); echo $path }
-echo "------------------"
-echo ""
-echo "=================="
+$dirs | ForEach-Object { $path = $_.FullName.replace($root, ""); Write-Output $path }
+Write-Output "------------------"
+Write-Output ""
+Write-Output "=================="
 
 foreach ($dir in $dirs) {
 	# write directly to host so that progress when stdout is captured can be monitored
 	Write-Host "---------------------"
 	Write-Host "repo: $($dir.Name)"
-	Write-Host "---------------------"	
+	Write-Host "---------------------"
 
 	$path = $dir.FullName.replace($root, "")
-	echo $path
-	echo "=================="
+	Write-Output $path
+	Write-Output "=================="
 	Get-TimeStamp
-	cd $path
+	Set-Location $path
 
 	git fetch origin
 	git push backup --all
-	
-	echo "------------------"
-	echo ""
-	echo "=================="
-	cd ../..
+
+	Write-Output "------------------"
+	Write-Output ""
+	Write-Output "=================="
+	Set-Location ../....
 }
 
 Get-TimeStamp

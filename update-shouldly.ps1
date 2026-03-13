@@ -1,9 +1,9 @@
 ## another script that attempts to do the same thing, that i couldn't get to work with pathing
 ## https://github.com/galadril/Shouldly.FromFluentAssertions/blob/main/migrate_fluentassertions_shouldly.ps1
 
-gci *.csproj -Recurse | %{ 
-	if (select-string -inputobject $_ -Pattern "FluentAssertions") { 
-		echo "remove FluentAssertions from $_.Fullname"; 
+Get-ChildItem *.csproj -Recurse | ForEach-Object {
+	if (Select-String -InputObject $_ -Pattern "FluentAssertions") {
+		Write-Output "remove FluentAssertions from $_.Fullname";
 		dotnet remove $_.FullName package FluentAssertions
 		dotnet add $_.FullName package Shouldly
 	}

@@ -6,14 +6,14 @@ if (-Not (Test-Path -Path .env)) {
 	$project.Trim() > .env
 }
 
-cp ../cortside.bowdlerizer/.env.local
-cp ../cortside.bowdlerizer/.gitignore
-cp ../cortside.bowdlerizer/appveyor.yml
-cp ../cortside.bowdlerizer/appveyor-build.ps1
-cp ../cortside.bowdlerizer/appveyor.yml
-cp ../cortside.bowdlerizer/dotenv.ps1
+Copy-Item ../amqptools/.env.local
+Copy-Item ../amqptools/.gitignore
+Copy-Item ../amqptools/appveyor.yml
+Copy-Item ../amqptools/appveyor-build.ps1
+Copy-Item ../amqptools/appveyor.yml
+Copy-Item ../amqptools/dotenv.ps1
 
-rm update-scripts.ps1 -ErrorAction Ignore
-rm update-targetframework.ps1 -ErrorAction Ignore
+Remove-Item update-scripts.ps1 -ErrorAction Ignore
+Remove-Item update-targetframework.ps1 -ErrorAction Ignore
 
-echo "Updated"
+Write-Output "Updated"
