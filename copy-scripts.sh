@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+pwsh -File ./clean.ps1
+cp -r ../scripts/.vscode .
+rm -f Repository.psm1
 pwsh -File ../scripts/update-librarybuild.ps1
 pwsh -File ../scripts/update-scripts.ps1
 pwsh -File ./update-nugetpackages.ps1
